@@ -1,31 +1,60 @@
-Dir Scanner
+# Dir Scanner
 
-A simple Python tool for directory enumeration on websites.
+Simple Python tool for directory enumeration on websites.
 
-Features
-Enumerates common directories and files on a target website
-Fast and lightweight
-Easy to use
-Educational and authorized penetration testing purposes only
-Requirements
-Python 3.10+
-requests
-Installation
+![Python](https://img.shields.io/badge/Python-3.x-blue)
+![License](https://img.shields.io/badge/License-MIT-green)
+
+## Features
+
+* Directory and file enumeration
+* Custom wordlist support
+* Fast HTTP requests
+* Simple command-line interface
+* Lightweight and easy to use
+
+## Installation
+
+```bash
 git clone https://github.com/JyxDevLab/dir-scanner.git
 cd dir-scanner
+```
+
+Install dependencies:
+
+```bash
 pip install -r requirements.txt
-Usage
+```
+
+## Usage
+
+```bash
 python main.py
+```
 
-Example:
+## Example
 
+```text
 Target: https://example.com
-Disclaimer
 
-This tool is intended for educational purposes and authorized security testing only.
+[200] /admin
+[200] /login
+[403] /backup
+[404] /test
+```
 
-Do not use it against systems without explicit permission.
+## Disclaimer
 
-License
+This project is intended for educational purposes and authorized security testing only.
 
-This project is licensed under the MIT License.
+The author is not responsible for any misuse of this software.
+
+## License
+
+This project is licensed under the MIT License. See the LICENSE file for details.
+
+## Author
+
+**JyxDevLab**
+
+GitHub: https://github.com/JyxDevLab
