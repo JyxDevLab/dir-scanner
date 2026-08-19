@@ -1,4 +1,5 @@
 import requests
+import os
 
 directorys = [
     "admin", "administrator", "admin_area", "admincp", "adminpanel",
@@ -34,21 +35,129 @@ directorys = [
     "cache", "data", "storage", "shared"
 ]
 
-url_site = input("Enter a website URL to continue the scan : ")
 
-if url_site[-1] == "/":
+BLACK = "\033[0;30m"
+RED = "\033[0;31m"
+GREEN = "\033[0;32m"
+BROWN = "\033[0;33m"
+BLUE = "\033[0;34m"
+PURPLE = "\033[0;35m"
+CYAN = "\033[0;36m"
+LIGHT_GRAY = "\033[0;37m"
+DARK_GRAY = "\033[1;30m"
+LIGHT_RED = "\033[1;31m"
+LIGHT_GREEN = "\033[1;32m"
+YELLOW = "\033[1;33m"
+LIGHT_BLUE = "\033[1;34m"
+LIGHT_PURPLE = "\033[1;35m"
+LIGHT_CYAN = "\033[1;36m"
+LIGHT_WHITE = "\033[1;37m"
+BOLD = "\033[1m"
+FAINT = "\033[2m"
+ITALIC = "\033[3m"
+UNDERLINE = "\033[4m"
+BLINK = "\033[5m"
+NEGATIVE = "\033[7m"
+CROSSED = "\033[9m"
+END = "\033[0m"
+
+
+print(GREEN + """
+██████╗ ██╗██████╗     ███████╗ ██████╗ █████╗ ███╗   ██╗███╗   ██╗███████╗██████╗
+██╔══██╗██║██╔══██╗    ██╔════╝██╔════╝██╔══██╗████╗  ██║████╗  ██║██╔════╝██╔══██╗
+██║  ██║██║██████╔╝    ███████╗██║     ███████║██╔██╗ ██║██╔██╗ ██║█████╗  ██████╔╝
+██║  ██║██║██╔══██╗    ╚════██║██║     ██╔══██║██║╚██╗██║██║╚██╗██║██╔══╝  ██╔══██╗
+██████╔╝██║██║  ██║    ███████║╚██████╗██║  ██║██║ ╚████║██║ ╚████║███████╗██║  ██║
+╚═════╝ ╚═╝╚═╝  ╚═╝    ╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝
+
+                            by JyxDevLab
+""" + END)
+
+url_site = input(
+    YELLOW + "Enter target URL: " + LIGHT_WHITE
+).strip()
+
+if url_site.endswith("/"):
     url_site = url_site[:-1]
 
-for pasta in directorys:
-    teste = url_site + "/" + pasta
+tested = 0
+found = 0
+total = len(directorys)
 
-    try:
-        dir_response = requests.get(teste, timeout=5)
-    except requests.exceptions.RequestException as e:
-        print(f"Error accessing {teste}: {e}")
-        continue
+with open("results.txt", "w") as results:
 
-    if dir_response.status_code in (401, 403):
-        print("Access Denied / Protected | " + teste + " | Stats Code: " + str(dir_response.status_code))
-    elif 200 <= dir_response.status_code < 300:
-        print("The directory exists and was found. | " + teste + " | Stats Code: " + str(dir_response.status_code))
+    for i, directory in enumerate(directorys, start=1):
+
+        tested += 1
+
+        bar_length = 30
+        filled = int(bar_length * i / total)
+
+        bar = "█" * filled + "-" * (bar_length - filled)
+
+        print(
+            f"\r{LIGHT_CYAN}[{bar}] {i}/{total} | Found: {found}{END}",
+            end=""
+        )
+
+        target = f"{url_site}/{directory}"
+
+        try:
+            response = requests.get(
+                target,
+                timeout=5,
+                allow_redirects=True
+            )
+
+            if 200 <= response.status_code < 300:
+
+                found += 1
+
+                print(
+                    f"\n{LIGHT_GREEN}[FOUND]{END} "
+                    f"{target} "
+                    f"{GREEN}(HTTP {response.status_code}){END}"
+                )
+
+                results.write(
+                    f"[FOUND] {target} (HTTP {response.status_code})\n"
+                )
+
+            elif response.status_code in (301, 302):
+
+                found += 1
+
+                print(
+                    f"\n{YELLOW}[REDIRECT]{END} "
+                    f"{target} "
+                    f"{YELLOW}(HTTP {response.status_code}){END}"
+                )
+
+                results.write(
+                    f"[REDIRECT] {target} (HTTP {response.status_code})\n"
+                )
+
+            elif response.status_code in (401, 403):
+
+                found += 1
+
+                print(
+                    f"\n{LIGHT_RED}[PROTECTED]{END} "
+                    f"{target} "
+                    f"{RED}(HTTP {response.status_code}){END}"
+                )
+
+                results.write(
+                    f"[PROTECTED] {target} (HTTP {response.status_code})\n"
+                )
+
+        except requests.RequestException:
+            pass
+
+print("\n")
+print(LIGHT_PURPLE + "=" * 50 + END)
+print(LIGHT_GREEN + "[+] Scan Completed" + END)
+print(LIGHT_BLUE + f"[+] Tested: {tested}" + END)
+print(LIGHT_GREEN + f"[+] Found: {found}" + END)
+print(LIGHT_CYAN + f"[+] Results saved to: {os.path.abspath('results.txt')}" + END)
+print(LIGHT_PURPLE + "=" * 50 + END)
