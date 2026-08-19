@@ -1,0 +1,2 @@
+https://www.telemacoborba.pr.gov.br -> HTTP 200
+https://webmail.telemacoborba.pr.gov.br -> HTTP 200

@@ -129,7 +129,7 @@ tested = 0
 found = 0
 total = len(subdomains)
 
-with open("results.txt", "w") as results:
+with open("results_backup.txt", "w") as results:
 
     for i, sub in enumerate(subdomains, start=1):
 

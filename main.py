@@ -84,7 +84,7 @@ tested = 0
 found = 0
 total = len(directorys)
 
-with open("results.txt", "w") as results:
+with open("results_backup.txt", "w") as results:
 
     for i, directory in enumerate(directorys, start=1):
 
